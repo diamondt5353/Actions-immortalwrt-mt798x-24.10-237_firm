@@ -46,7 +46,14 @@ CFG_FILE="./package/base-files/files/bin/config_generate"
 #sed -i "s/192\.168\.[0-9]*\.[0-9]*/$WRT_IP/g" $CFG_FILE
 #修改默认主机名
 sed -i "s/hostname='.*'/hostname='OpenWrt'/g" $CFG_FILE
+#添加第三方软件源
+sed -i "s/option check_signature/# option check_signature/g" package/system/opkg/Makefile
+echo src/gz openwrt_kiddin9 https://dl.openwrt.ai/latest/packages/aarch64_cortex-a53/kiddin9 >> ./package/system/opkg/files/customfeeds.conf
 
+# 最大连接数修改为65535
+sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=65535' package/base-files/files/etc/sysctl.conf
+
+	
 #安装和更新软件包
 UPDATE_PACKAGE() {
 	local PKG_NAME=$1
