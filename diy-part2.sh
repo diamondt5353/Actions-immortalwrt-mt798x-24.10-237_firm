@@ -24,7 +24,7 @@ function git_sparse_clone() {
   branch="$1" repourl="$2" && shift 2
   git clone --depth=1 -b $branch --single-branch --filter=blob:none --sparse $repourl
   repodir=$(echo $repourl | awk -F '/' '{print $(NF)}')
-  cd $repodir && git sparse-checkout set $@
+  cd $repodir && git sparse-checkout set $@  
   mv -f $@ ../package
   cd .. && rm -rf $repodir
 }
@@ -86,3 +86,28 @@ cp -f "$GITHUB_WORKSPACE/dts/npc/npc.conf" "package/base-files/files/etc/npc.con
 chmod +x package/base-files/files/etc/npc.conf
 
 echo "PH-HY3000和BT-R320 dts文件替换成功"
+
+# 解决 libxcrypt 因 -Werror=format-nonliteral 导致的编译错误
+LIBXCRYPT_MAKEFILE="feeds/packages/libs/libxcrypt/Makefile"
+if [ -f "$LIBXCRYPT_MAKEFILE" ]; then
+    sed -i '/CFLAGS="\$(TARGET_CFLAGS) -Wno-format-nonliteral"/d' "$LIBXCRYPT_MAKEFILE"
+    # 向 CONFIGURE_ARGS 中注入 CFLAGS，禁用格式非字面量警告
+    sed -i '/CONFIGURE_ARGS +=/a \	CFLAGS="\$(TARGET_CFLAGS) -Wno-format-nonliteral" \\' "$LIBXCRYPT_MAKEFILE"
+    if grep -q 'CFLAGS="\$(TARGET_CFLAGS) -Wno-format-nonliteral"' "$LIBXCRYPT_MAKEFILE"; then
+        echo "✅ 设置libxcrypt编译参数为忽略警告"
+    else
+        echo "❌ 设置libxcrypt编译参数失败" >&2
+        exit 1
+    fi
+else
+    echo "ℹ️ 未找到 libxcrypt 的 Makefile，跳过修改"
+fi
+
+# 解决 quickstart 插件编译提示不支持压缩
+if [ -f "package/feeds/nas_luci/luci-app-quickstart/Makefile" ]; then
+    # 修正路径，从nas_luci源中查找该插件
+    sed -i 's/DEPENDS:=+luci-base/DEPENDS:=+luci-base\n    NO_MINIFY=1/' "package/feeds/nas_luci/luci-app-quickstart/Makefile"
+    echo "✅ 成功修改 quickstart 插件配置"
+else
+    echo "ℹ️ 未找到 quickstart 插件的 Makefile，跳过修改"
+fi
