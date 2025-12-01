@@ -23,6 +23,8 @@ rm -rf feeds/packages/lang/golang
 echo 'src-git golang https://github.com/sbwml/packages_lang_golang' >> feeds.conf.default
 # git clone https://github.com/sbwml/packages_lang_golang -b 25.x feeds/packages/lang/golang
 
+git clone https://github.com/orgx2812/golang feeds/packages/lang/golang
+
 # Uncomment a feed source
 #sed -i 's/^#\(.*helloworld\)/\1/' feeds.conf.default
 
