@@ -11,9 +11,16 @@
 #
 # mosdns
 rm -rf feeds/packages/lang/golang
-git clone https://github.com/sbwml/packages_lang_golang -b 22.x feeds/packages/lang/golang
+#git clone https://github.com/sbwml/packages_lang_golang -b 22.x feeds/packages/lang/golang
 # rm -rf feeds/packages/net/mosdns
 # git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
+
+
+# 删除旧的 golang feed 定义
+sed -i '/golang/d' feeds.conf.default
+
+# 尝试用 master 分支（通常包含最新版本）
+echo 'src-git golang https://github.com/sbwml/packages_lang_golang' >> feeds.conf.default
 
 
 # Uncomment a feed source
