@@ -10,7 +10,7 @@
 # See /LICENSE for more information.
 #
 # mosdns
-rm -rf feeds/packages/lang/golang
+#rm -rf feeds/packages/lang/golang
 #git clone https://github.com/sbwml/packages_lang_golang -b 22.x feeds/packages/lang/golang
 # rm -rf feeds/packages/net/mosdns
 # git clone https://github.com/sbwml/luci-app-mosdns -b v5 package/mosdns
@@ -21,7 +21,8 @@ sed -i '/golang/d' feeds.conf.default
 
 # 尝试用 master 分支（通常包含最新版本）
 echo 'src-git golang https://github.com/sbwml/packages_lang_golang' >> feeds.conf.default
-
+rm -rf feeds/packages/lang/golang
+git clone https://github.com/sbwml/packages_lang_golang -b 25.x feeds/packages/lang/golang
 
 # Uncomment a feed source
 #sed -i 's/^#\(.*helloworld\)/\1/' feeds.conf.default
