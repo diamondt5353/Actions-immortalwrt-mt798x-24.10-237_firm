@@ -8,8 +8,8 @@
 #include "mt7981.dtsi"
 
 / {
-	model = "BT-R320 eMMC bootstrap versions";
-	compatible = "bt,r320-emmc", "mediatek,mt7981";
+	model = "BYD-G56 eMMC bootstrap versions";
+	compatible = "bdy,g56-emmc", "mediatek,mt7981";
 
 	aliases {
 		serial0 = &uart0;
